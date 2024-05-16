@@ -42,12 +42,13 @@
                     $('#signup-message').addClass('p-4');
                     $('#signup-message').addClass('bg-success');
                     form.trigger('reset');
+                    window.location.href = '{% url "login" %}';
                    // window.location='{% url "success_page" %}'
                 },
                 error: function() {
                     $('#signup-message').text("An error occurred");
                     // Change CSS properties based on error status
-                    $('#signup-message').addClass('ng-danger');
+                    $('#signup-message').addClass('bg-danger');
                 }
             });
         });

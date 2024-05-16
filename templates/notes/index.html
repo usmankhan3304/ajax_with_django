@@ -1,8 +1,61 @@
 {% extends "notes/base.html" %}
+{% load crispy_forms_tags %}
 {% load static %}
 {% block body %}
 
-<h1>Hello world how are you all!</h1>
+
+<h1>{{request.user.username}}-{{request.user.email}}</h1>
+<a href="{% url "logout" %}" class="btn btn-success">Logout here!</a>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6 border rounded p-3 mx-auto">
+            <form action="{% url "home" %}" method="POST" id="note_form">
+                <p id="note-message"></p>
+                {% csrf_token %}
+                    <h4> Add your Note  Here!</h4>
+                {{form | crispy}}
+                <input type="submit" class="btn btn-sm btn-success p-2" name="" value="submit" id="">
+            </form>
+            
+     
+        </div>
+        <div class="col-lg-6">
+            
+        <h3>hello</h3>
+        </div>
+    </div>
+</div>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+<script>
+    $(document).ready(function(){
+        $("#note_form").submit(function(e){
+            e.preventDefault();
+            var form = $(this);
+            var formData = form.serialize();
+            // Extract CSRF token from the form
+            var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+    
+            // Add CSRF token to the form data
+            formData += '&csrfmiddlewaretoken=' + csrfToken;
+            
+            $.ajax({
+                type: form.attr('method'), // Changed 'type' to 'method' to get the form's method
+                url: form.attr('action'),
+                data: formData, // Fixed the parentheses here
+                success: function(response) {
+                    $('#note-message').text(response.message); // Corrected console.log syntax
+                    $('#note-message').addClass('bg-success');
+                    $('#note-message').addClass('p-2');
+                    form.trigger('reset');
+                },
+                error: function(xhr, status, error) {
+                    console.log(error); // Log any errors for debugging
+                }
+            });
+        });
+    });
+    
+</script>
 
 {% endblock body %}
 

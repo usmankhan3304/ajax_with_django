@@ -1,0 +1,54 @@
+{% extends "notes/base.html" %}
+{% load crispy_forms_tags %}
+{% block body %}
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    <div class="container col-4 p-4 border rounded">
+        <form action="{% url "login" %}" method="POST" id="login_user">
+            <p id="login-message"></p>
+            {% csrf_token %}
+                <h4 class="p-4">Login Form</h4>
+            {{form | crispy}}
+            <input type="submit" class="btn btn-sm btn-success p-2" name="" value="submit" id="">
+        </form>
+
+
+
+
+        <script>
+            $(document).ready(function(){
+                $('#login_user').submit(function(e){
+                    e.preventDefault();
+                    var form = $(this);
+                    var formData = form.serialize();
+                    var csrfToken = $('input[name="csrfmiddlewaretoken"]').val();
+    
+                    // Add CSRF token to the form data
+                    formData += '&csrfmiddlewaretoken=' + csrfToken;
+    
+                    $.ajax({
+                        type: 'POST',
+                        url: form.attr('action'),
+                        data: formData,
+                        success: function(response) {
+                            $('#login-message').text(response.message);
+                            if (response.status == 'success') {
+                                $('#login-message').addClass('bg-success');
+                                $('#login-message').addClass('p-4');
+                                form.trigger('reset');
+                                
+                                window.location.href = '{% url "home" %}';
+                            } else {
+                                $('#login-message').addClass('bg-danger');
+                                $('#login-message').addClass('p-4');
+                            }
+                        }
+                       
+                    });
+                });
+            });
+
+        </script>
+
+{% endblock body %}
+
