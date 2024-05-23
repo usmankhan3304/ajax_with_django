@@ -2,7 +2,7 @@ from django.urls import path
 from Notes_app import views
 
 urlpatterns = [
-    path('',views.NoteCreateView.as_view(),name="home"),
+    path('',views.index,name="home"),
     path("signup/",views.signup,name="signup"),
     path("login/",views.user_login,name="login"),
     path("logout/", views.logout_page, name="logout"),
